@@ -1,0 +1,28 @@
+# Base de données de développement.
+#
+# Démarrage :  docker compose up -d
+# Les identifiants viennent du fichier .env (non versionné), jamais d'ici.
+
+services:
+  db:
+    # Version épinglée volontairement.
+    image: postgres:17.6-alpine
+    container_name: miyoshix-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-miyoshix}
+      POSTGRES_USER: ${DB_USER:-miyoshix}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD manquant - copie .env.example vers .env}
+    ports:
+      # Boucle locale uniquement. 5433 est pris par le PostgreSQL 17 de la machine.
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-miyoshix} -d ${DB_NAME:-miyoshix}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:

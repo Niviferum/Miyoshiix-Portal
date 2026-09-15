@@ -1,0 +1,90 @@
+spring:
+  application:
+    name: miyoshix-portal
+
+  # Identifiants fournis par l'environnement (voir .env.example).
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/miyoshix}
+    username: ${DB_USER:miyoshix}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    # Flyway possède le schéma ; validate échoue si les entités divergent des tables.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: ${DISCORD_CLIENT_ID}
+            client-secret: ${DISCORD_CLIENT_SECRET}
+            client-name: Discord
+            authorization-grant-type: authorization_code
+            # À déclarer à l'identique dans Discord > OAuth2 > Redirects.
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            # identify = identifiant, pseudo, avatar. Ni email ni liste de serveurs.
+            scope:
+              - identify
+
+        provider:
+          discord:
+            authorization-uri: https://discord.com/oauth2/authorize
+            token-uri: https://discord.com/api/oauth2/token
+            user-info-uri: https://discord.com/api/v10/users/@me
+            user-name-attribute: id
+
+server:
+  port: ${SERVER_PORT:8080}
+  # Vide : masque l'en-tête Server.
+  server-header:
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+  servlet:
+    session:
+      timeout: 7d
+      cookie:
+        name: MIYOSHIX_SESSION
+        http-only: true
+        same-site: lax
+        # true en production, où le portail est servi en HTTPS.
+        secure: ${COOKIE_SECURE:false}
+        path: /
+
+# Seul health est exposé ; les autres endpoints publient la configuration résolue.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+portal:
+  login-page: /login
+  # Ajouter un module : une entrée ici + une route paresseuse côté Angular.
+  modules:
+    - key: exemple
+      label: Module d'exemple
+      description: Sert de gabarit pour le prochain vrai module.
+      icon: "🌸"
+      path: /modules/exemple
+      minimum-role: USER
+      enabled: true
+
+logging:
+  level:
+    com.miyoshix.portal: INFO

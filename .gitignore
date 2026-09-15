@@ -1,0 +1,28 @@
+# --- Secrets : rien de ce qui suit ne doit partir dans un dépôt ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+!**/.mvn/wrapper/maven-wrapper.jar
+
+# --- Node / Angular ---
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# --- Outils ---
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+DOCUMENTATION.md
+.claude
+

@@ -1,0 +1,48 @@
+# Profil "test" : complète src/main/resources/application.yml, ne le remplace pas.
+# Activé par @ActiveProfiles("test") sur les classes de test Spring.
+
+spring:
+  # Identifiants factices, aucun test n'appelle réellement Discord.
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: test-client-id
+            client-secret: test-client-secret
+
+  # L'URL réelle est fournie par Testcontainers via @ServiceConnection.
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: test
+    password: test
+
+portal:
+  bootstrap-admin:
+  modules:
+    - key: exemple
+      label: Module d'exemple
+      description: Gabarit.
+      icon: "🌸"
+      path: /modules/exemple
+      minimum-role: USER
+      enabled: true
+    - key: admin-only
+      label: Réservé admin
+      description: Visible seulement par un ADMIN.
+      icon: "🔧"
+      path: /modules/admin
+      minimum-role: ADMIN
+      enabled: true
+    - key: desactive
+      label: Module désactivé
+      description: Ne doit jamais apparaître.
+      icon: "🚫"
+      path: /modules/desactive
+      minimum-role: USER
+      enabled: false
+
+logging:
+  level:
+    org.testcontainers: WARN
+    com.github.dockerjava: WARN
