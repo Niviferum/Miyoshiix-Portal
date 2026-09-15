@@ -1,0 +1,33 @@
+<div class="intro">
+  <h1>Bonjour {{ auth.me()?.displayName }}</h1>
+  <p>Choisis un module pour commencer.</p>
+</div>
+
+<app-retro-window title="Mes modules">
+  @switch (modules()) {
+    @case (undefined) {
+      <p role="status">Chargement des modules…</p>
+    }
+    @case (null) {
+      <p class="alert" role="alert">Impossible de charger les modules. Recharge la page.</p>
+    }
+    @default {
+      <ul class="icons field" role="list">
+        @for (module of modules() ?? []; track module.key) {
+          <li>
+            <a class="icon-link" [href]="module.url">
+              <!-- Emplacement de l'icône SVG du module (module.icon). -->
+              <span class="icon-slot" aria-hidden="true" [attr.data-icon]="module.icon"></span>
+              <span class="icon-label">{{ module.label }}</span>
+              @if (module.description) {
+                <span class="icon-description">{{ module.description }}</span>
+              }
+            </a>
+          </li>
+        } @empty {
+          <li class="empty">Aucun module disponible pour le moment.</li>
+        }
+      </ul>
+    }
+  }
+</app-retro-window>

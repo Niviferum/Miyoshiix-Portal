@@ -1,0 +1,12 @@
+<section class="window" [attr.aria-labelledby]="titleId">
+  <div class="titlebar">
+    @if (headingLevel() === 1) {
+      <h1 class="titlebar-text" [id]="titleId">{{ title() }}</h1>
+    } @else {
+      <h2 class="titlebar-text" [id]="titleId">{{ title() }}</h2>
+    }
+  </div>
+  <div class="window-body">
+    <ng-content />
+  </div>
+</section>

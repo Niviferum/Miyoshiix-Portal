@@ -12,8 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.miyoshix.portal.config.SecurityConfig;
 import com.miyoshix.portal.modules.ModuleCatalog;
 import com.miyoshix.portal.modules.PortalProperties;
+import com.miyoshix.portal.security.AccessDeniedLogger;
 import com.miyoshix.portal.security.DiscordOAuth2UserService;
 import com.miyoshix.portal.security.LoginFailureHandler;
+import com.miyoshix.portal.security.LogoutSuccessLogger;
 import com.miyoshix.portal.security.PortalPrincipal;
 import com.miyoshix.portal.user.AppRole;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,8 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @WebMvcTest(PortalController.class)
 @ActiveProfiles("test")
-@Import({SecurityConfig.class, ModuleCatalog.class, PortalControllerTest.PropertiesTestConfig.class})
+@Import({SecurityConfig.class, ModuleCatalog.class, LogoutSuccessLogger.class, AccessDeniedLogger.class,
+        PortalControllerTest.PropertiesTestConfig.class})
 class PortalControllerTest {
 
     @Autowired
@@ -72,7 +75,8 @@ class PortalControllerTest {
         mockMvc.perform(get("/api/modules").with(authentication(sessionDe(AppRole.USER))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].key").value("exemple"));
+                .andExpect(jsonPath("$[0].key").value("exemple"))
+                .andExpect(jsonPath("$[0].url").value("http://exemple.localhost:9001/"));
     }
 
     @Test

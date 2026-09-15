@@ -23,6 +23,7 @@ public class PortalPrincipal implements OAuth2User, Serializable {
     private final String avatarUrl;
     private final AppRole role;
 
+    
     public PortalPrincipal(String discordId, String displayName, String avatarUrl, AppRole role) {
         this.discordId = discordId;
         this.displayName = displayName;

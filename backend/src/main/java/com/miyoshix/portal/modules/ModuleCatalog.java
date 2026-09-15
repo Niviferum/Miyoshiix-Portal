@@ -2,6 +2,7 @@ package com.miyoshix.portal.modules;
 
 import com.miyoshix.portal.user.AppRole;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,8 +26,16 @@ public class ModuleCatalog {
                 .toList();
     }
 
+    /** Le module actif portant cette clé, s'il existe. */
+    public Optional<PortalProperties.Module> findEnabled(String key) {
+        return modules.stream()
+                .filter(PortalProperties.Module::enabled)
+                .filter(module -> module.key().equals(key))
+                .findFirst();
+    }
+
     /** ADMIN voit tout ce que voit USER : la hiérarchie suit l'ordre de l'énumération. */
-    private static boolean isAllowed(AppRole actual, AppRole required) {
+    public static boolean isAllowed(AppRole actual, AppRole required) {
         return actual.ordinal() >= required.ordinal();
     }
 }

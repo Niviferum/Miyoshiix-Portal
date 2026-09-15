@@ -45,11 +45,11 @@ public class PortalController {
     public record MeResponse(String id, String displayName, String avatarUrl, String role) {
     }
 
-    public record ModuleResponse(String key, String label, String description, String icon, String path) {
+    public record ModuleResponse(String key, String label, String description, String icon, String url) {
 
         static ModuleResponse from(PortalProperties.Module module) {
             return new ModuleResponse(
-                    module.key(), module.label(), module.description(), module.icon(), module.path());
+                    module.key(), module.label(), module.description(), module.icon(), module.url());
         }
     }
 }

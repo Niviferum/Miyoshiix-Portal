@@ -19,28 +19,45 @@ spring:
 
 portal:
   bootstrap-admin:
+  oidc:
+    issuer: http://portal.localhost
+    signing-key:
   modules:
     - key: exemple
       label: Module d'exemple
       description: Gabarit.
-      icon: "🌸"
-      path: /modules/exemple
+      icon: exemple
+      url: http://exemple.localhost:9001/
       minimum-role: USER
       enabled: true
+      client:
+        client-secret: secret-exemple
+        redirect-uris:
+          - http://exemple.localhost:9001/login/oauth2/code/miyoshiix
+        post-logout-redirect-uris:
+          - http://exemple.localhost:9001/
     - key: admin-only
       label: Réservé admin
       description: Visible seulement par un ADMIN.
-      icon: "🔧"
-      path: /modules/admin
+      icon: admin
+      url: http://admin.localhost:9002/
       minimum-role: ADMIN
       enabled: true
+      client:
+        client-secret: secret-admin
+        redirect-uris:
+          - http://admin.localhost:9002/login/oauth2/code/miyoshiix
     - key: desactive
       label: Module désactivé
       description: Ne doit jamais apparaître.
-      icon: "🚫"
-      path: /modules/desactive
+      icon: desactive
+      url: http://desactive.localhost:9003/
       minimum-role: USER
       enabled: false
+      client:
+        client-secret: secret-desactive
+        redirect-uris:
+          - http://desactive.localhost:9003/login/oauth2/code/miyoshiix
 
 logging:
   level:

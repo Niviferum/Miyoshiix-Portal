@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.window {
+  padding: 3px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--raised);
+}
+
+.titlebar {
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-titlebar);
+  color: var(--color-on-titlebar);
+}
+
+.titlebar-text {
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.window-body {
+  display: grid;
+  gap: var(--space-md);
+  padding: var(--space-md);
+}

@@ -33,6 +33,29 @@ final class TestBrowser {
         return send(builder(pathOrUrl).GET());
     }
 
+    HttpResponse<String> get(String pathOrUrl, Map<String, String> headers) throws IOException, InterruptedException {
+        HttpRequest.Builder builder = builder(pathOrUrl).GET();
+        headers.forEach(builder::header);
+        return send(builder);
+    }
+
+    /** POST d'un formulaire {@code application/x-www-form-urlencoded}. */
+    HttpResponse<String> postForm(String path, Map<String, String> form, Map<String, String> headers)
+            throws IOException, InterruptedException {
+        String body = form.entrySet().stream()
+                .map(entry -> encode(entry.getKey()) + "=" + encode(entry.getValue()))
+                .collect(Collectors.joining("&"));
+        HttpRequest.Builder builder = builder(path)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(body));
+        headers.forEach(builder::header);
+        return send(builder);
+    }
+
+    private static String encode(String value) {
+        return java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8);
+    }
+
     HttpResponse<String> post(String path, Map<String, String> headers) throws IOException, InterruptedException {
         HttpRequest.Builder builder = builder(path).POST(HttpRequest.BodyPublishers.noBody());
         headers.forEach(builder::header);

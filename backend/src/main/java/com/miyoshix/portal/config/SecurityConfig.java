@@ -2,11 +2,14 @@ package com.miyoshix.portal.config;
 
 import static org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.pathPattern;
 
+import com.miyoshix.portal.security.AccessDeniedLogger;
 import com.miyoshix.portal.security.DiscordOAuth2UserService;
 import com.miyoshix.portal.security.LoginFailureHandler;
+import com.miyoshix.portal.security.LogoutSuccessLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,9 +17,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 /**
  * Chaîne de filtres de sécurité : authentification OAuth2 Discord, session serveur avec
@@ -42,19 +46,27 @@ public class SecurityConfig {
 
     private final DiscordOAuth2UserService discordUserService;
     private final LoginFailureHandler loginFailureHandler;
+    private final LogoutSuccessLogger logoutSuccessLogger;
+    private final AccessDeniedLogger accessDeniedLogger;
     private final boolean cookieSecure;
 
     public SecurityConfig(
             DiscordOAuth2UserService discordUserService,
             LoginFailureHandler loginFailureHandler,
+            LogoutSuccessLogger logoutSuccessLogger,
+            AccessDeniedLogger accessDeniedLogger,
             @Value("${server.servlet.session.cookie.secure:false}") boolean cookieSecure) {
         this.discordUserService = discordUserService;
         this.loginFailureHandler = loginFailureHandler;
+        this.logoutSuccessLogger = logoutSuccessLogger;
+        this.accessDeniedLogger = accessDeniedLogger;
         this.cookieSecure = cookieSecure;
     }
 
     @Bean
+    @Order(2)
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        HttpSessionRequestCache requestCache = authorizationRequestCache();
         http
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
@@ -78,19 +90,21 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .sessionFixation(fixation -> fixation.newSession()))
 
+            .requestCache(cache -> cache.requestCache(requestCache))
+
             .oauth2Login(oauth2 -> oauth2
                     .userInfoEndpoint(userInfo -> userInfo.userService(discordUserService))
-                    .successHandler(successHandler())
+                    .successHandler(successHandler(requestCache))
                     .failureHandler(loginFailureHandler))
 
             .logout(logout -> logout
                     .logoutRequestMatcher(pathPattern(HttpMethod.POST, "/api/auth/logout"))
                     .deleteCookies("MIYOSHIX_SESSION", "XSRF-TOKEN")
                     .invalidateHttpSession(true)
-                    .logoutSuccessHandler((request, response, authentication) ->
-                            response.setStatus(HttpStatus.NO_CONTENT.value())))
+                    .logoutSuccessHandler(logoutSuccessLogger))
 
             .exceptionHandling(exceptions -> exceptions
+                    .accessDeniedHandler(accessDeniedLogger)
                     // 401 JSON sur l'API au lieu d'une redirection vers Discord.
                     .defaultAuthenticationEntryPointFor(
                             new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
@@ -113,10 +127,25 @@ public class SecurityConfig {
         return repository;
     }
 
-    /** Redirige toujours vers la racine du SPA après connexion. */
-    private SimpleUrlAuthenticationSuccessHandler successHandler() {
-        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler("/");
-        handler.setAlwaysUseDefaultTargetUrl(true);
+    /**
+     * Mémorise uniquement les demandes d'autorisation des modules, pour y revenir après la
+     * connexion Discord. Les autres requêtes refusées (par exemple un 401 sur /api/me) ne
+     * sont jamais rejouées.
+     */
+    private static HttpSessionRequestCache authorizationRequestCache() {
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setRequestMatcher(pathPattern(HttpMethod.GET, "/oauth2/authorize"));
+        return requestCache;
+    }
+
+    /**
+     * Après connexion : reprend la demande d'autorisation d'un module si elle a été
+     * mémorisée, sinon renvoie à la racine du SPA.
+     */
+    private static SavedRequestAwareAuthenticationSuccessHandler successHandler(HttpSessionRequestCache requestCache) {
+        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl("/");
+        handler.setRequestCache(requestCache);
         return handler;
     }
 }

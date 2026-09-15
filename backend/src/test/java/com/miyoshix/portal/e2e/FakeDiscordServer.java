@@ -32,6 +32,20 @@ final class FakeDiscordServer {
         server.start();
     }
 
+    /**
+     * Démarre un serveur arrêté seulement à la fin de la JVM : il reste disponible tant que
+     * Spring garde en cache le contexte de test qui pointe vers lui.
+     */
+    static FakeDiscordServer startShared() {
+        try {
+            FakeDiscordServer server = new FakeDiscordServer();
+            Runtime.getRuntime().addShutdownHook(new Thread(server::stop));
+            return server;
+        } catch (IOException e) {
+            throw new IllegalStateException("Impossible de démarrer le faux serveur Discord", e);
+        }
+    }
+
     String baseUrl() {
         return "http://127.0.0.1:" + server.getAddress().getPort();
     }

@@ -1,0 +1,5 @@
+<!-- L'icône annonce le thème vers lequel le bouton bascule ; son alt donne le nom du bouton. -->
+<button type="button" class="btn btn-icon" (click)="themes.toggle()">
+  <img src="/icons/MOON08.ico" alt="Mode sombre" width="32" height="32" [hidden]="themes.theme() === 'dark'" />
+  <img src="/icons/SUN.ico" alt="Mode clair" width="32" height="32" [hidden]="themes.theme() !== 'dark'" />
+</button>

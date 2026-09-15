@@ -1,0 +1,26 @@
+.site-footer {
+  display: flex;
+  justify-content: flex-end;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-on-desktop);
+  font-size: 0.875rem;
+}
+
+// La zone cliquable englobe le libellé : cible de 44 px de haut malgré la petite case.
+.motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--color-titlebar);
+  cursor: pointer;
+}

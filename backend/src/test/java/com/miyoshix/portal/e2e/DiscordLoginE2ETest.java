@@ -18,8 +18,11 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -37,6 +40,7 @@ import org.springframework.test.context.DynamicPropertySource;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(PostgresTestSupport.class)
+@ExtendWith(OutputCaptureExtension.class)
 class DiscordLoginE2ETest {
 
     private static final String ALLOWED_ID = "123456789012345678";
@@ -203,7 +207,7 @@ class DiscordLoginE2ETest {
     }
 
     @Test
-    void deconnecteAvecJetonCsrfEtInvalideLaSession() throws Exception {
+    void deconnecteAvecJetonCsrfEtInvalideLaSession(CapturedOutput output) throws Exception {
         users.save(new AppUser(ALLOWED_ID, "pseudo", AppRole.USER));
         loginWithDiscord(discordUser(ALLOWED_ID));
         String session = browser.cookie(SESSION_COOKIE).orElseThrow();
@@ -213,8 +217,12 @@ class DiscordLoginE2ETest {
         String csrfToken = browser.cookie(CSRF_COOKIE).orElseThrow();
 
         assertThat(browser.post("/api/auth/logout", Map.of()).statusCode()).isEqualTo(403);
+        assertThat(output).contains("Accès refusé (jeton CSRF absent ou invalide) : POST /api/auth/logout par "
+                + ALLOWED_ID);
+
         assertThat(browser.post("/api/auth/logout", Map.of("X-XSRF-TOKEN", csrfToken)).statusCode())
                 .isEqualTo(204);
+        assertThat(output).contains("Déconnexion de Pseudo Affiché (" + ALLOWED_ID + ").");
 
         TestBrowser replay = new TestBrowser("http://localhost:" + port);
         replay.setCookie(SESSION_COOKIE, session);

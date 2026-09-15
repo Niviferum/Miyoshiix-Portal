@@ -1,0 +1,59 @@
+:host {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.intro {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--space-md);
+  margin: 0;
+  padding: var(--space-md);
+  list-style: none;
+}
+
+.icon-link {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-xs);
+  height: 100%;
+  padding: var(--space-sm);
+  color: var(--color-text);
+  text-align: center;
+  text-decoration: none;
+
+  &:hover .icon-label,
+  &:focus-visible .icon-label {
+    background: var(--color-selection);
+    color: var(--color-on-selection);
+  }
+}
+
+.icon-slot {
+  width: 3rem;
+  height: 3rem;
+  background: var(--color-primary);
+  box-shadow: var(--raised-strong);
+}
+
+.icon-label {
+  padding: 0 var(--space-xs);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.icon-description {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.empty {
+  grid-column: 1 / -1;
+}

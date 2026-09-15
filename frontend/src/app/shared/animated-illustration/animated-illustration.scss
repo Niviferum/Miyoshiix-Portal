@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
+// Format 16/7 avec 8rem de hauteur minimale. Calculé en unités de conteneur plutôt
+// qu'avec aspect-ratio + min-height, qui imposerait aussi une largeur minimale.
+.frame {
+  position: relative;
+  height: max(8rem, 43.75cqi);
+  overflow: hidden;
+}
+
+// Positionnée en absolu : l'image ne dicte ni la hauteur ni la largeur minimale du cadre,
+// et le surplus transparent est rogné de part et d'autre.
+img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: none;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+}

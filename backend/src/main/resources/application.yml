@@ -75,15 +75,27 @@ management:
 
 portal:
   login-page: /login
-  # Ajouter un module : une entrée ici + une route paresseuse côté Angular.
+  # Fournisseur d'identité OpenID Connect pour les modules.
+  oidc:
+    # Adresse publique du portail, reprise dans le champ iss des jetons.
+    issuer: ${PORTAL_ISSUER:http://localhost:8080}
+    # Clé privée RSA PKCS#8. Vide : clé éphémère régénérée à chaque démarrage.
+    signing-key: ${PORTAL_OIDC_SIGNING_KEY:}
+  # Ajouter un module : une entrée ici. Chaque module est un site séparé, dans son propre dépôt.
   modules:
-    - key: exemple
-      label: Module d'exemple
-      description: Sert de gabarit pour le prochain vrai module.
-      icon: "🌸"
-      path: /modules/exemple
+    - key: medecinetopia
+      label: Médecinetopia
+      icon: medecinetopia
+      url: ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/
       minimum-role: USER
-      enabled: true
+      enabled: ${MODULE_MEDECINETOPIA_ENABLED:false}
+      # Enregistrement auprès du fournisseur d'identité ; client_id = key.
+      client:
+        client-secret: ${MODULE_MEDECINETOPIA_CLIENT_SECRET:}
+        redirect-uris:
+          - ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/login/oauth2/code/miyoshiix
+        post-logout-redirect-uris:
+          - ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/
 
 logging:
   level:

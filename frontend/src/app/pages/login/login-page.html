@@ -1,0 +1,31 @@
+<app-skip-link />
+
+<header class="login-header">
+  <app-theme-toggle />
+</header>
+
+<main id="contenu" class="login" tabindex="-1">
+  <app-retro-window class="login-window" title="Connexion à MiYoshiix" [headingLevel]="1">
+    <!-- Pixel art 540 × 500 dont la grille fait 8 px : affiché à 50 %, un pixel du dessin vaut 4 px. -->
+    <app-animated-illustration
+      animatedSrc="/illustrations/planet.webp"
+      staticSrc="/illustrations/planet-fixe.png"
+      [width]="270"
+      [height]="250"
+    />
+
+    <p>Connecte-toi avec ton compte Discord pour retrouver tes modules.</p>
+
+    @if (errorMessage) {
+      <p class="alert" role="alert">{{ errorMessage }}</p>
+    }
+
+    <div class="login-actions">
+      <button type="button" class="btn btn-primary" [disabled]="redirecting()" (click)="login()">
+        {{ redirecting() ? 'Redirection vers Discord…' : 'Se connecter avec Discord' }}
+      </button>
+    </div>
+  </app-retro-window>
+</main>
+
+<app-site-footer />

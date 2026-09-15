@@ -1,0 +1,9 @@
+<div class="frame field">
+  <img
+    [src]="motion.animationsEnabled() ? animatedSrc() : staticSrc()"
+    alt=""
+    [width]="width()"
+    [height]="height()"
+    decoding="async"
+  />
+</div>

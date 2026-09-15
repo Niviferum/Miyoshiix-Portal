@@ -1,0 +1,32 @@
+<app-skip-link />
+
+<header class="taskbar">
+  <div class="taskbar-inner">
+    <a class="btn brand" routerLink="/">MiYoshiix</a>
+
+    <div class="actions">
+      <app-theme-toggle />
+
+      @if (auth.me(); as me) {
+        <div class="tray field">
+          @if (me.avatarUrl) {
+            <img class="avatar" [src]="me.avatarUrl" alt="" width="28" height="28" />
+          }
+          <span class="user-name">{{ me.displayName }}</span>
+        </div>
+        <button type="button" class="btn" [disabled]="loggingOut()" (click)="logout()">
+          Se déconnecter
+        </button>
+      }
+    </div>
+  </div>
+</header>
+
+<main id="contenu" class="content" tabindex="-1">
+  @if (logoutFailed()) {
+    <p class="alert" role="alert">La déconnexion a échoué. Recharge la page puis réessaie.</p>
+  }
+  <router-outlet />
+</main>
+
+<app-site-footer />
