@@ -49,18 +49,21 @@ public class SecurityConfig {
     private final LogoutSuccessLogger logoutSuccessLogger;
     private final AccessDeniedLogger accessDeniedLogger;
     private final boolean cookieSecure;
+    private final String loginPage;
 
     public SecurityConfig(
             DiscordOAuth2UserService discordUserService,
             LoginFailureHandler loginFailureHandler,
             LogoutSuccessLogger logoutSuccessLogger,
             AccessDeniedLogger accessDeniedLogger,
-            @Value("${server.servlet.session.cookie.secure:false}") boolean cookieSecure) {
+            @Value("${server.servlet.session.cookie.secure:false}") boolean cookieSecure,
+            @Value("${portal.login-page:/login}") String loginPage) {
         this.discordUserService = discordUserService;
         this.loginFailureHandler = loginFailureHandler;
         this.logoutSuccessLogger = logoutSuccessLogger;
         this.accessDeniedLogger = accessDeniedLogger;
         this.cookieSecure = cookieSecure;
+        this.loginPage = loginPage;
     }
 
     @Bean
@@ -93,6 +96,8 @@ public class SecurityConfig {
             .requestCache(cache -> cache.requestCache(requestCache))
 
             .oauth2Login(oauth2 -> oauth2
+                    // Page Angular : désactive la page de connexion générée par Spring Security.
+                    .loginPage(loginPage)
                     .userInfoEndpoint(userInfo -> userInfo.userService(discordUserService))
                     .successHandler(successHandler(requestCache))
                     .failureHandler(loginFailureHandler))

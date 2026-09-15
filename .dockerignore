@@ -1,0 +1,11 @@
+.git
+.claude
+.env
+.env.*
+DOCUMENTATION.md
+**/node_modules
+**/dist
+**/.angular
+**/target
+**/.vscode
+**/.idea

@@ -45,7 +45,10 @@ spring:
             user-name-attribute: id
 
 server:
-  port: ${SERVER_PORT:8080}
+  # PORT est fourni par Railway. Une variable SERVER_PORT, si elle existe, l'emporte sur cette valeur.
+  port: ${PORT:8080}
+  # Reprend le schéma et l'hôte d'origine (X-Forwarded-Proto, X-Forwarded-Host) derrière le proxy HTTPS.
+  forward-headers-strategy: framework
   # Vide : masque l'en-tête Server.
   server-header:
   error:

@@ -187,6 +187,16 @@ class DiscordLoginE2ETest {
         assertThat(browser.get("/api/me").statusCode()).isEqualTo(401);
     }
 
+    @Test
+    void construitLAdresseDeRetourDiscordAvecLesEnTetesDuProxyHttps() throws Exception {
+        HttpResponse<String> response = browser.get("/oauth2/authorization/discord",
+                Map.of("X-Forwarded-Proto", "https", "X-Forwarded-Host", "miyoshiix.com"));
+
+        assertThat(response.statusCode()).isEqualTo(302);
+        assertThat(queryParams(URI.create(location(response))))
+                .containsEntry("redirect_uri", "https://miyoshiix.com/login/oauth2/code/discord");
+    }
+
     // --- Session ------------------------------------------------------------------
 
     @Test
@@ -250,6 +260,14 @@ class DiscordLoginE2ETest {
         assertThat(route.statusCode()).isEqualTo(200);
         assertThat(route.headers().firstValue("Content-Type")).hasValueSatisfying(
                 type -> assertThat(type).startsWith("text/html"));
+    }
+
+    @Test
+    void sertLaPageDeConnexionAngularEtNonCelleDeSpringSecurity() throws Exception {
+        HttpResponse<String> login = browser.get("/login?error=not_allowed");
+
+        assertThat(login.statusCode()).isEqualTo(200);
+        assertThat(login.body()).contains("<title>Portail MiYoshiix</title>").doesNotContain("default-ui.css");
     }
 
     @Test
