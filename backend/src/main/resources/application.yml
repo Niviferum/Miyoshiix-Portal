@@ -99,6 +99,18 @@ portal:
           - ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/login/oauth2/code/miyoshiix
         post-logout-redirect-uris:
           - ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/
+    - key: crochedex
+      label: Crochedex
+      icon: crochedex
+      url: ${MODULE_CROCHEDEX_URL:http://crochedex.localhost:8082}/
+      minimum-role: USER
+      enabled: ${MODULE_CROCHEDEX_ENABLED:false}
+      client:
+        client-secret: ${MODULE_CROCHEDEX_CLIENT_SECRET:}
+        redirect-uris:
+          - ${MODULE_CROCHEDEX_URL:http://crochedex.localhost:8082}/login/oauth2/code/miyoshiix
+        post-logout-redirect-uris:
+          - ${MODULE_CROCHEDEX_URL:http://crochedex.localhost:8082}/
 
 logging:
   level:
