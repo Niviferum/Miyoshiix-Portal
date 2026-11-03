@@ -4,10 +4,10 @@ export type Theme = 'light' | 'dark';
 
 export const THEME_STORAGE_KEY = 'miyoshix-theme';
 
-/** Couleur de la barre du navigateur mobile pour chaque thème (fond du bureau). */
+/** Couleur de la barre du navigateur mobile pour chaque thème (couleur de la palette la plus proche de la barre du haut). */
 const THEME_COLORS: Record<Theme, string> = {
-  light: '#60d394',
-  dark: '#2d3047',
+  light: '#f3f6f4',
+  dark: '#0c0f0e',
 };
 
 /** Thème clair ou sombre : état courant, bascule et mémorisation du choix. */

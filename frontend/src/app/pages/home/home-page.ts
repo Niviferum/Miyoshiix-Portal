@@ -4,12 +4,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { AuthService } from '../../core/auth-service';
 import { PortalModule } from '../../core/portal-api';
-import { RetroWindow } from '../../shared/window/retro-window';
+import { Panel } from '../../shared/panel/panel';
 
 /** Accueil du portail : salutation et fenêtre des modules. */
 @Component({
   selector: 'app-home-page',
-  imports: [RetroWindow],
+  imports: [Panel],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
 })

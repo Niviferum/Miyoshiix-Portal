@@ -13,7 +13,7 @@ import { MotionService } from '../../core/motion-service';
 export class AnimatedIllustration {
   readonly animatedSrc = input.required<string>();
   readonly staticSrc = input.required<string>();
-  /** Taille d'affichage en pixels CSS : un multiple entier de la grille du pixel art. */
+  /** Taille d'affichage en pixels CSS. */
   readonly width = input.required<number>();
   readonly height = input.required<number>();
 

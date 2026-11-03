@@ -1,11 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/auth-service';
-import { AnimatedIllustration } from '../../shared/animated-illustration/animated-illustration';
 import { SiteFooter } from '../../shared/site-footer/site-footer';
 import { SkipLink } from '../../shared/skip-link/skip-link';
 import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
-import { RetroWindow } from '../../shared/window/retro-window';
+import { Panel } from '../../shared/panel/panel';
 
 /** Messages affichés selon le code ?error= renvoyé par le back. */
 const ERROR_MESSAGES: Record<string, string> = {
@@ -18,7 +17,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 /** Page de connexion : bouton Discord et message d'erreur éventuel. */
 @Component({
   selector: 'app-login-page',
-  imports: [SiteFooter, SkipLink, ThemeToggle, RetroWindow, AnimatedIllustration],
+  imports: [SiteFooter, SkipLink, ThemeToggle, Panel],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })

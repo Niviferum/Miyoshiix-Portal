@@ -1,14 +1,14 @@
 <app-skip-link />
 
-<header class="taskbar">
-  <div class="taskbar-inner">
+<header class="topbar">
+  <div class="topbar-inner">
     <a class="btn brand" routerLink="/">MiYoshiix</a>
 
     <div class="actions">
       <app-theme-toggle />
 
       @if (auth.me(); as me) {
-        <div class="tray field">
+        <div class="tray">
           @if (me.avatarUrl) {
             <img class="avatar" [src]="me.avatarUrl" alt="" width="28" height="28" />
           }

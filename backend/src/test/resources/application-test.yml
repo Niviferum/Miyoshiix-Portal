@@ -26,7 +26,7 @@ portal:
     - key: exemple
       label: Module d'exemple
       description: Gabarit.
-      icon: exemple
+      icon: exemple.png
       url: http://exemple.localhost:9001/
       minimum-role: USER
       enabled: true
@@ -39,7 +39,7 @@ portal:
     - key: admin-only
       label: Réservé admin
       description: Visible seulement par un ADMIN.
-      icon: admin
+      icon: admin.png
       url: http://admin.localhost:9002/
       minimum-role: ADMIN
       enabled: true
@@ -50,7 +50,7 @@ portal:
     - key: desactive
       label: Module désactivé
       description: Ne doit jamais apparaître.
-      icon: desactive
+      icon: desactive.png
       url: http://desactive.localhost:9003/
       minimum-role: USER
       enabled: false

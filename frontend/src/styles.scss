@@ -1,80 +1,74 @@
-// Style rétro inspiré de Windows 95 : bureau, fenêtres en relief, barres de titre.
+// Style sobre d'intranet corporatif futuriste : aplats, filets fins, coins coupés.
 //
-// Les composants n'utilisent que les rôles (--color-*, --bevel-*), jamais les couleurs
-// brutes. Les nuances de relief sont des mélanges de deux couleurs de la palette.
+// Les composants n'utilisent que les rôles (--color-*), jamais les couleurs brutes.
+// Les nuances de fond et de filet sont des mélanges de deux couleurs de la palette.
 //
 // Le thème et les animations sont pilotés par les attributs data-theme et data-motion de
 // <html>, posés par public/preferences-init.js puis par ThemeService et MotionService.
 // Sans attribut (JavaScript désactivé), les réglages du système s'appliquent.
 
 @mixin light-theme {
-  --color-desktop: var(--emerald);
-  --color-on-desktop: var(--space-indigo);
-  --color-surface: color-mix(in srgb, var(--periwinkle) 80%, var(--space-indigo));
-  --color-field: var(--periwinkle);
-  --color-text: var(--space-indigo);
-  --color-text-muted: var(--deep-mocha);
-  --color-titlebar: var(--royal-plum);
-  --color-on-titlebar: var(--periwinkle);
-  --color-primary: var(--emerald);
-  --color-on-primary: var(--space-indigo);
-  --color-selection: var(--royal-plum);
-  --color-on-selection: var(--periwinkle);
-  --color-focus: var(--space-indigo);
-
-  --bevel-light: var(--periwinkle);
-  --bevel-shadow: color-mix(in srgb, var(--periwinkle) 45%, var(--space-indigo));
-  --bevel-dark: var(--space-indigo);
+  --color-background: color-mix(in srgb, var(--blanc) 93%, var(--noir));
+  --color-on-background: var(--noir);
+  --color-surface: var(--blanc);
+  --color-field: color-mix(in srgb, var(--blanc) 97%, var(--noir));
+  --color-text: var(--noir);
+  --color-text-muted: color-mix(in srgb, var(--noir) 75%, var(--blanc));
+  --color-line: color-mix(in srgb, var(--blanc) 82%, var(--noir));
+  --color-line-strong: color-mix(in srgb, var(--blanc) 45%, var(--noir));
+  --color-primary: color-mix(in srgb, var(--emerald) 40%, var(--noir));
+  --color-on-primary: var(--blanc);
+  --color-selection: var(--color-primary);
+  --color-on-selection: var(--blanc);
+  --color-focus: var(--color-primary);
 
   color-scheme: light;
 }
 
 @mixin dark-theme {
-  --color-desktop: var(--space-indigo);
-  --color-on-desktop: var(--periwinkle);
-  --color-surface: color-mix(in srgb, var(--space-indigo) 82%, var(--periwinkle));
-  --color-field: var(--space-indigo);
-  --color-text: var(--periwinkle);
-  --color-text-muted: var(--periwinkle);
-  --color-titlebar: var(--royal-plum);
-  --color-on-titlebar: var(--periwinkle);
+  --color-background: var(--noir);
+  --color-on-background: var(--blanc);
+  --color-surface: color-mix(in srgb, var(--noir) 92%, var(--blanc));
+  --color-field: var(--noir);
+  --color-text: var(--blanc);
+  --color-text-muted: color-mix(in srgb, var(--blanc) 72%, var(--noir));
+  --color-line: color-mix(in srgb, var(--blanc) 20%, var(--noir));
+  --color-line-strong: color-mix(in srgb, var(--blanc) 45%, var(--noir));
   --color-primary: var(--emerald);
-  --color-on-primary: var(--space-indigo);
-  --color-selection: var(--royal-plum);
-  --color-on-selection: var(--periwinkle);
+  --color-on-primary: var(--noir);
+  --color-selection: var(--emerald);
+  --color-on-selection: var(--noir);
   --color-focus: var(--emerald);
-
-  --bevel-light: color-mix(in srgb, var(--periwinkle) 45%, var(--space-indigo));
-  --bevel-shadow: var(--space-indigo);
-  --bevel-dark: var(--deep-mocha);
 
   color-scheme: dark;
 }
 
 :root {
-  --space-indigo: #2d3047;
   --emerald: #60d394;
-  --deep-mocha: #322923;
-  --periwinkle: #c9ddff;
-  --royal-plum: #720058;
+  --noir: #0c0f0e;
+  --blanc: #f3f6f4;
 
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
   --space-xl: 2.5rem;
-  --content-width: 60rem;
+  --content-width: 64rem;
 
-  // Relief sorti (fenêtres, boutons) et relief enfoncé (champs, bouton pressé).
-  --raised:
-    inset -1px -1px var(--bevel-dark), inset 1px 1px var(--bevel-light),
-    inset -2px -2px var(--bevel-shadow), inset 2px 2px var(--color-surface);
-  --raised-strong:
-    inset -1px -1px var(--bevel-dark), inset 1px 1px var(--bevel-light),
-    inset -2px -2px var(--bevel-shadow), inset 2px 2px var(--bevel-light);
-  --sunken:
-    inset -1px -1px var(--bevel-light), inset 1px 1px var(--bevel-shadow),
-    inset -2px -2px var(--color-surface), inset 2px 2px var(--bevel-dark);
+  --font-sans: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+
+  // Angle coupé en haut à droite.
+  --chamfer: 8px;
+  --chamfer-shape: polygon(
+    0 0,
+    calc(100% - var(--chamfer)) 0,
+    100% var(--chamfer),
+    100% 100%,
+    0 100%
+  );
+
+  --transition: 180ms ease-out;
 
   @include light-theme;
 }
@@ -96,7 +90,7 @@
 }
 
 html {
-  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
@@ -104,15 +98,22 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-desktop);
-  color: var(--color-on-desktop);
+  background: var(--color-background);
+  color: var(--color-on-background);
+}
+
+::selection {
+  background: var(--color-selection);
+  color: var(--color-on-selection);
 }
 
 h1,
 h2,
 h3 {
   margin: 0;
+  font-weight: 600;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 h1 {
@@ -138,8 +139,18 @@ img {
 }
 
 :focus-visible {
-  outline: 2px dotted var(--color-focus);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+// Étiquette courte en majuscules espacées (codes de section, intitulés de données).
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 // Lien d'évitement : invisible jusqu'à ce qu'il reçoive le focus clavier.
@@ -150,10 +161,10 @@ img {
   left: var(--space-sm);
   z-index: 10;
   padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-line-strong);
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: var(--raised-strong);
-  font-weight: 700;
+  font-weight: 600;
   transform: translateY(-200%);
 
   &:focus {
@@ -170,23 +181,20 @@ img {
   gap: var(--space-sm);
   min-height: 2.75rem;
   padding: var(--space-sm) var(--space-md);
-  border: 0;
+  border: 1px solid var(--color-line-strong);
   border-radius: 0;
-  background: var(--color-surface);
+  background: transparent;
   color: var(--color-text);
-  box-shadow: var(--raised-strong);
   font: inherit;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
 
-  &:focus-visible {
-    outline-offset: -6px;
-  }
-
-  &:active:not(:disabled) {
-    box-shadow: var(--sunken);
-    padding-top: calc(var(--space-sm) + 1px);
-    padding-left: calc(var(--space-md) + 1px);
+  &:hover:not(:disabled) {
+    border-color: var(--color-text);
+    background: var(--color-field);
   }
 
   &:disabled {
@@ -196,43 +204,50 @@ img {
 
 // Bouton contenant seulement une icône de 32 px : carré de 48 px.
 .btn-icon {
-  padding: var(--space-sm);
-
-  img {
-    image-rendering: pixelated;
-  }
-
-  &:active:not(:disabled) {
-    padding: calc(var(--space-sm) + 1px) calc(var(--space-sm) - 1px) calc(var(--space-sm) - 1px)
-      calc(var(--space-sm) + 1px);
-  }
+  padding: calc(var(--space-sm) - 1px);
 }
 
+// Action principale : fond chanfreiné dessiné sur ::before, pour que clip-path ne
+// rogne pas le contour de focus du bouton.
 .btn-primary {
-  background: var(--color-primary);
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  padding-right: calc(var(--space-md) + var(--chamfer) / 2);
   color: var(--color-on-primary);
 
-  &:focus-visible {
-    outline-color: var(--color-on-primary);
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-primary);
+    clip-path: var(--chamfer-shape);
+  }
+
+  &:hover:not(:disabled) {
+    background: transparent;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 }
 
-// Zone enfoncée, comme les listes et champs de Windows 95.
+// Zone de contenu en retrait (listes, champs, cadres d'illustration).
 
 .field {
+  border: 1px solid var(--color-line-strong);
   background: var(--color-field);
   color: var(--color-text);
-  box-shadow: var(--sunken);
 }
 
 // Encart de message : le sens passe par le texte et le cadre, pas par la couleur seule.
 
 .alert {
   padding: var(--space-sm) var(--space-md);
-  border-left: 0.4rem solid var(--color-titlebar);
+  border: 1px solid var(--color-line-strong);
+  border-left: 0.25rem solid var(--color-text);
   background: var(--color-field);
   color: var(--color-text);
-  box-shadow: var(--sunken);
 }
 
 // Texte réservé aux lecteurs d'écran.

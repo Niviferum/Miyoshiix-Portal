@@ -54,7 +54,7 @@ public record PortalProperties(
      * @param key         identifiant stable du module, utilisé comme client_id OpenID Connect
      * @param label       nom affiché sur la tuile
      * @param description phrase d'accroche affichée sous le nom
-     * @param icon        nom du fichier d'icône de la tuile, sans extension (optionnel)
+     * @param icon        nom du fichier d'icône de la tuile, avec son extension (optionnel)
      * @param url         adresse du site du module, ouverte par la tuile
      * @param minimumRole rôle minimum requis pour voir le module et s'y connecter
      * @param enabled     permet de masquer un module sans supprimer sa configuration
@@ -65,8 +65,8 @@ public record PortalProperties(
                     message = "la clé doit être en minuscules, chiffres et tirets") String key,
             @NotBlank String label,
             String description,
-            @Pattern(regexp = "^[a-z0-9-]{1,40}$",
-                    message = "l'icône est un nom de fichier : minuscules, chiffres et tirets") String icon,
+            @Pattern(regexp = "^[a-z0-9-]{1,40}\\.(png|webp|gif|svg)$",
+                    message = "l'icône est un nom de fichier de frontend/public/icons/modules/ : minuscules, chiffres, tirets et extension png, webp, gif ou svg") String icon,
             @NotBlank @Pattern(regexp = SAFE_URL,
                     message = "l'url du module doit être une adresse HTTPS (HTTP réservé à localhost)") String url,
             @NotNull AppRole minimumRole,

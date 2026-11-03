@@ -8,19 +8,16 @@ describe('ThemeToggle', () => {
     TestBed.resetTestingModule();
   });
 
-  const visibleImage = (element: HTMLElement) =>
-    [...element.querySelectorAll('img')].filter((img) => !img.hidden);
-
-  it('nomme le bouton par l’alt de la seule icône visible, et bascule au clic', async () => {
+  it('annonce le thème cible dans son libellé, et bascule au clic', async () => {
     const fixture = TestBed.createComponent(ThemeToggle);
     await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
+    const button = (fixture.nativeElement as HTMLElement).querySelector('button')!;
 
-    expect(visibleImage(element).map((img) => img.alt)).toEqual(['Mode sombre']);
+    expect(button.textContent?.trim()).toBe('Mode sombre');
 
-    element.querySelector('button')!.click();
+    button.click();
     await fixture.whenStable();
 
-    expect(visibleImage(element).map((img) => img.alt)).toEqual(['Mode clair']);
+    expect(button.textContent?.trim()).toBe('Mode clair');
   });
 });

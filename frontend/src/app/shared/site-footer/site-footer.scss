@@ -1,10 +1,13 @@
 .site-footer {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
   max-width: var(--content-width);
   margin: 0 auto;
   padding: var(--space-sm) var(--space-md);
-  color: var(--color-on-desktop);
+  color: var(--color-on-background);
   font-size: 0.875rem;
 }
 
@@ -21,6 +24,6 @@ input {
   width: 1rem;
   height: 1rem;
   margin: 0;
-  accent-color: var(--color-titlebar);
+  accent-color: var(--color-primary);
   cursor: pointer;
 }

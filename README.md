@@ -14,7 +14,7 @@ The portal lives at `miyoshiix.com`. It signs users in with Discord and checks e
 - **Server-side session.** The session lives in an `HttpOnly` cookie, with no token in `localStorage`. CSRF protection and a strict Content Security Policy are on.
 - **OpenID Connect provider for modules.** Built on Spring Authorization Server: authorization code flow with PKCE (S256) required, exact redirect URIs, a minimum role per module, and RP-initiated logout.
 - **Module catalog as configuration.** Adding a module is one entry in `application.yml`. That entry sets its tile, its URL, its minimum role and its OIDC client, all validated at startup.
-- **Accessible retro UI.** The Angular front is styled after Windows 95, with light and dark themes and a global switch to turn animations off. It follows RGAA (French accessibility guidelines).
+- **Accessible, understated UI.** The Angular front has a sober, corporate-futuristic look in green, black and white, with light and dark themes and a global switch to turn animations off. It follows RGAA (French accessibility guidelines).
 
 ## Architecture
 
@@ -154,7 +154,7 @@ portal:
   modules:
     - key: medecinetopia            # also the OIDC client_id
       label: Médecinetopia
-      icon: medecinetopia           # frontend/public/icons/modules/
+      icon: medecinetopia.svg       # optional, file in frontend/public/icons/modules/
       url: ${MODULE_MEDECINETOPIA_URL}/
       minimum-role: USER
       enabled: ${MODULE_MEDECINETOPIA_ENABLED:false}
@@ -177,6 +177,37 @@ The module then connects as a standard OIDC client:
 | Flow | Authorization code with PKCE (S256) |
 | Scopes | `openid profile` |
 | Claims | `sub` (Discord ID), `name`, `picture`, `role` |
+
+### Running a module locally
+
+The portal and the module run side by side, each with its own database. Example with [Crochedex](https://github.com/Niviferum/crochedex) on port 8082:
+
+1. In the portal's `.env`, enable the module and give it a secret:
+
+   ```bash
+   MODULE_CROCHEDEX_URL=http://crochedex.localhost:8082
+   MODULE_CROCHEDEX_ENABLED=true
+   MODULE_CROCHEDEX_CLIENT_SECRET=   # openssl rand -base64 32
+   ```
+
+2. In the module's `.env`, set `PORTAL_ISSUER=http://localhost:8080` and the same secret (`PORTAL_CLIENT_SECRET` for Crochedex).
+3. Start the portal (database, backend, frontend) as in [Getting started](#getting-started), then the module:
+
+   ```bash
+   cd ../crochedex
+   docker compose up -d                 # its own PostgreSQL, on 5434
+   cd backend
+   set -a && . ../.env && set +a
+   ./mvnw spring-boot:run               # http://localhost:8082
+   ```
+
+4. Sign in on <http://localhost:4200> and click the module's tile. It opens `http://crochedex.localhost:8082/`. Browsers resolve `*.localhost` to the local machine, so `/etc/hosts` needs no change. The module sends you back to the portal, which already knows you and returns you to the module without going through Discord again.
+
+Things to keep in mind:
+
+- The portal reads `.env` and `application.yml` only at startup. Restart it after changing either.
+- Without `PORTAL_OIDC_SIGNING_KEY`, the portal signs tokens with a new key at each start. Sign in to the module again after restarting the portal.
+- Give each module its own port (8081 is taken by Médecinetopia) and its own session cookie name, distinct from `MIYOSHIX_SESSION`.
 
 ## Testing
 
@@ -213,7 +244,7 @@ Production settings:
 ## Roadmap
 
 - [x] Discord sign-in and allowlist
-- [x] Retro, accessible frontend
+- [x] Accessible frontend
 - [x] OpenID Connect provider for modules
 - [x] Modules as separate subdomains
 - [x] Railway deployment

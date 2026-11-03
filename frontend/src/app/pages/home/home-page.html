@@ -1,9 +1,10 @@
 <div class="intro">
+  <span class="label" aria-hidden="true">Portail · Accès</span>
   <h1>Bonjour {{ auth.me()?.displayName }}</h1>
   <p>Choisis un module pour commencer.</p>
 </div>
 
-<app-retro-window title="Mes modules">
+<app-panel title="Mes modules" code="MOD-01">
   @switch (modules()) {
     @case (undefined) {
       <p role="status">Chargement des modules…</p>
@@ -12,16 +13,26 @@
       <p class="alert" role="alert">Impossible de charger les modules. Recharge la page.</p>
     }
     @default {
-      <ul class="icons field" role="list">
+      <ul class="icons" role="list">
         @for (module of modules() ?? []; track module.key) {
           <li>
             <a class="icon-link" [href]="module.url">
-              <!-- Emplacement de l'icône SVG du module (module.icon). -->
-              <span class="icon-slot" aria-hidden="true" [attr.data-icon]="module.icon"></span>
+              <span class="icon-slot">
+                @if (module.icon?.endsWith('.svg')) {
+                  <span
+                    class="icon-image icon-mask"
+                    [style.mask-image]="'url(/icons/modules/' + module.icon + ')'"
+                    aria-hidden="true"
+                  ></span>
+                } @else if (module.icon) {
+                  <img class="icon-image" [src]="'icons/modules/' + module.icon" alt="" width="32" height="32" />
+                }
+              </span>
               <span class="icon-label">{{ module.label }}</span>
               @if (module.description) {
                 <span class="icon-description">{{ module.description }}</span>
               }
+              <span class="icon-arrow" aria-hidden="true"></span>
             </a>
           </li>
         } @empty {
@@ -30,4 +41,4 @@
       </ul>
     }
   }
-</app-retro-window>
+</app-panel>

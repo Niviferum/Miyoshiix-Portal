@@ -1,0 +1,15 @@
+<section class="panel" [attr.aria-labelledby]="titleId">
+  <header class="panel-header">
+    @if (code(); as code) {
+      <span class="label" aria-hidden="true">{{ code }}</span>
+    }
+    @if (headingLevel() === 1) {
+      <h1 class="panel-title" [id]="titleId">{{ title() }}</h1>
+    } @else {
+      <h2 class="panel-title" [id]="titleId">{{ title() }}</h2>
+    }
+  </header>
+  <div class="panel-body">
+    <ng-content />
+  </div>
+</section>

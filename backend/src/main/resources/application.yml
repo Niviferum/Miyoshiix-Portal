@@ -88,7 +88,6 @@ portal:
   modules:
     - key: medecinetopia
       label: Médecinetopia
-      icon: medecinetopia
       url: ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/
       minimum-role: USER
       enabled: ${MODULE_MEDECINETOPIA_ENABLED:false}
@@ -101,7 +100,7 @@ portal:
           - ${MODULE_MEDECINETOPIA_URL:http://medecinetopia.localhost:8081}/
     - key: crochedex
       label: Crochedex
-      icon: crochedex
+      icon: knitting.svg
       url: ${MODULE_CROCHEDEX_URL:http://crochedex.localhost:8082}/
       minimum-role: USER
       enabled: ${MODULE_CROCHEDEX_ENABLED:false}
